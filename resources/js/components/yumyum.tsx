@@ -313,7 +313,7 @@ export function ProductCard({ product, compact = false }: { product: PickleProdu
     return (
         <>
             <article className={`border-border bg-card group overflow-hidden rounded-lg border shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl ${compact ? 'grid grid-cols-[140px_1fr]' : ''}`}>
-                <div className={`bg-muted relative overflow-hidden ${compact ? 'min-h-44' : 'aspect-[4/3]'}`}>
+                <div className={`bg-muted relative overflow-hidden ${compact ? 'min-h-44' : 'aspect-[4/4]'}`}>
                     {product.image && (
                         <img
                             src={product.image}

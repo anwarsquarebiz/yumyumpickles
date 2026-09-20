@@ -1,0 +1,1 @@
+import{K as t,j as m}from"./app-DlzXAPRm.js";import{i as a}from"./yumyum-images-ogaRer6Q.js";function n({className:r,imageClassName:s,fallbackClassName:e}){const{store:o}=t().props;return o.logo_url?m.jsx("img",{src:o.logo_url,alt:o.name,className:s??r}):m.jsx("img",{src:a.logoImage,alt:o.name||"YumYum Pickles",className:s??r})}export{n as S};
