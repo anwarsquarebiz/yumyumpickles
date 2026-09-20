@@ -22,7 +22,7 @@ class SettingsService
      */
     public const Defaults = [
         'store.name' => 'YumYum Pickles',
-        'store.email' => 'hello@yumyumpickles.com',
+        'store.email' => 'hello@yumyumhomemadepickles.com',
         'store.phone' => '+91 99999 99999',
         'store.address' => '',
         'store.currency' => 'INR',

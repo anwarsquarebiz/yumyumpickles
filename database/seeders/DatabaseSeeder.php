@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $admin = User::query()->updateOrCreate(
-            ['email' => 'admin@yumyumpickles.com'],
+            ['email' => 'admin@yumyumhomemadepickles.com'],
             [
                 'name' => 'YumYum Admin',
                 'password' => Hash::make('password'),
@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         );
 
         User::query()->updateOrCreate(
-            ['email' => 'customer@yumyumpickles.com'],
+            ['email' => 'customer@yumyumhomemadepickles.com'],
             [
                 'name' => 'Jane Customer',
                 'password' => Hash::make('password'),
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
 
         app(SettingsService::class)->setMany([
             'store.name' => 'YumYum Pickles',
-            'store.email' => 'hello@yumyumpickles.com',
+            'store.email' => 'hello@yumyumhomemadepickles.com',
             'store.phone' => '+91 99999 99999',
             'store.tagline' => 'The Taste of Tradition',
             'store.whatsapp' => '919999999999',
@@ -170,7 +170,7 @@ class DatabaseSeeder extends Seeder
                     'title' => 'Refund Policy',
                     'intro' => 'Food is personal. If something is not right with your jar, we would rather make it right than argue the small print.',
                     'sections' => [
-                        ['title' => 'Damaged or leaking jars', 'body' => 'Write to hello@yumyumpickles.com within 48 hours of delivery with unboxing photos. We will ship a replacement or refund the item.'],
+                        ['title' => 'Damaged or leaking jars', 'body' => 'Write to hello@yumyumhomemadepickles.com within 48 hours of delivery with unboxing photos. We will ship a replacement or refund the item.'],
                         ['title' => 'Wrong item', 'body' => 'If we send the wrong flavour, we will collect or ask you to keep it and send the correct jar at our cost.'],
                         ['title' => 'Change of mind', 'body' => 'Because this is fresh food, we cannot accept returns once a jar has been opened. Unopened jars may be discussed case by case.'],
                         ['title' => 'Refund timelines', 'body' => 'Approved refunds are processed to the original payment method within 5–7 working days. COD refunds are issued by UPI or bank transfer.'],
@@ -183,7 +183,7 @@ class DatabaseSeeder extends Seeder
                         ['title' => 'What we collect', 'body' => 'Name, phone, email, delivery address, order history and, if you choose, wishlist and review activity. Payments are processed by our payment partner; we do not store card numbers.'],
                         ['title' => 'How we use it', 'body' => 'To fulfil orders, share delivery updates, remember your cart, and — only if you opt in — send new flavour notes and offers.'],
                         ['title' => 'Your choices', 'body' => 'You can update your profile, addresses and marketing preferences from your account at any time.'],
-                        ['title' => 'Contact', 'body' => 'Questions about your data? Write to hello@yumyumpickles.com.'],
+                        ['title' => 'Contact', 'body' => 'Questions about your data? Write to hello@yumyumhomemadepickles.com.'],
                     ],
                 ],
                 'terms' => [
