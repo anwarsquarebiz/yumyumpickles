@@ -1,0 +1,325 @@
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+    --font-script: 'Allura', cursive;
+    --color-brand-deep: var(--brand-deep);
+    --color-brand-leaf: var(--brand-leaf);
+    --color-brand-cream: var(--brand-cream);
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar-background);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+}
+
+:root {
+    color-scheme: light;
+    --radius: 0.5rem;
+    --background: oklch(0.98 0.025 89);
+    --foreground: oklch(0.25 0.04 38);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.25 0.04 38);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.25 0.04 38);
+    --primary: oklch(0.48 0.19 28);
+    --primary-foreground: oklch(0.99 0.01 90);
+    --secondary: oklch(0.58 0.18 45);
+    --secondary-foreground: oklch(0.99 0.01 90);
+    --muted: oklch(0.94 0.03 83);
+    --muted-foreground: oklch(0.44 0.04 47);
+    --accent: oklch(0.84 0.17 86);
+    --accent-foreground: oklch(0.25 0.04 38);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.99 0.01 90);
+    --border: oklch(0.86 0.045 72);
+    --input: oklch(0.86 0.045 72);
+    --ring: oklch(0.48 0.19 28);
+    --brand-deep: oklch(0.19 0.035 35);
+    --brand-leaf: oklch(0.39 0.1 130);
+    --brand-cream: oklch(0.98 0.025 89);
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    --sidebar-background: oklch(0.19 0.035 35);
+    --sidebar-foreground: oklch(0.99 0.01 90);
+    --sidebar-primary: oklch(0.84 0.17 86);
+    --sidebar-primary-foreground: oklch(0.19 0.035 35);
+    --sidebar-accent: oklch(0.25 0.04 38);
+    --sidebar-accent-foreground: oklch(0.99 0.01 90);
+    --sidebar-border: oklch(0.28 0.04 38);
+    --sidebar-ring: oklch(0.84 0.17 86);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground min-w-80 overflow-x-hidden;
+        font-family: var(--font-sans);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--font-display);
+    }
+}
+
+@utility section-shell {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+}
+
+@utility hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+}
+
+@media (min-width: 640px) {
+    .section-shell {
+        padding-inline: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .section-shell {
+        padding-inline: 2.5rem;
+    }
+}
+
+@keyframes announce-fade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes kenburns {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.08);
+    }
+}
+
+.announce-fade {
+    animation: announce-fade 500ms ease;
+}
+
+.kenburns {
+    animation: kenburns 8s ease-in-out alternate infinite;
+}
+
+.masonry {
+    columns: 2;
+    column-gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .masonry {
+        columns: 4;
+    }
+}
+
+@layer components {
+    .product-details-body {
+        @apply space-y-4 text-[0.9375rem] leading-relaxed text-neutral-600 dark:text-neutral-300;
+    }
+
+    .product-details-body > :first-child {
+        @apply mt-0;
+    }
+
+    .product-details-body > :last-child {
+        @apply mb-0;
+    }
+
+    .product-details-body h2 {
+        @apply mt-6 border-t border-neutral-200 pt-5 text-base font-semibold text-neutral-900 first:mt-0 first:border-t-0 first:pt-0 dark:border-neutral-800 dark:text-neutral-50;
+    }
+
+    .product-details-body h3 {
+        @apply mt-4 text-sm font-semibold tracking-wide text-neutral-900 uppercase dark:text-neutral-100;
+    }
+
+    .product-details-body p {
+        @apply leading-relaxed;
+    }
+
+    .product-details-body strong {
+        @apply font-semibold text-neutral-900 dark:text-neutral-100;
+    }
+
+    .product-details-body ul {
+        @apply list-disc space-y-2 pl-5;
+    }
+
+    .product-details-body ol {
+        @apply list-decimal space-y-2 pl-5;
+    }
+
+    .product-details-body li {
+        @apply pl-1;
+    }
+
+    .product-details-body li::marker {
+        @apply text-neutral-400 dark:text-neutral-500;
+    }
+
+    .product-details-body hr {
+        @apply hidden;
+    }
+
+    .product-details-body a {
+        @apply font-medium text-neutral-900 underline underline-offset-4 dark:text-neutral-100;
+    }
+
+    .page-content {
+        @apply space-y-4 text-[0.9375rem] leading-relaxed text-neutral-700 dark:text-neutral-300;
+    }
+
+    .page-content > :first-child {
+        @apply mt-0;
+    }
+
+    .page-content > :last-child {
+        @apply mb-0;
+    }
+
+    .page-content h2 {
+        @apply mt-8 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50;
+    }
+
+    .page-content h3 {
+        @apply mt-6 text-lg font-semibold text-neutral-900 dark:text-neutral-100;
+    }
+
+    .page-content p {
+        @apply leading-relaxed;
+    }
+
+    .page-content strong {
+        @apply font-semibold text-neutral-900 dark:text-neutral-100;
+    }
+
+    .page-content ul {
+        @apply list-disc space-y-2 pl-5;
+    }
+
+    .page-content ol {
+        @apply list-decimal space-y-2 pl-5;
+    }
+
+    .page-content li {
+        @apply pl-1;
+    }
+
+    .page-content a {
+        @apply font-medium text-primary underline underline-offset-4;
+    }
+
+    .page-content blockquote {
+        @apply border-l-2 border-primary/40 pl-4 text-neutral-600 italic dark:text-neutral-300;
+    }
+
+    .page-content u {
+        @apply underline;
+    }
+
+    .tiptap p.is-editor-empty:first-child::before {
+        @apply text-muted-foreground pointer-events-none float-left h-0 content-[attr(data-placeholder)];
+    }
+}
