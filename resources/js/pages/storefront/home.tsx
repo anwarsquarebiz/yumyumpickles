@@ -80,7 +80,7 @@ export default function Home({ featuredProducts, seo }: HomeProps) {
                 </div>
             </section>
 
-            <section className="py-16 sm:py-24">
+            <section className="hidden py-16 sm:py-24">
                 <div className="section-shell">
                     <SectionTitle script="Find your favourite" title="Featured categories" copy="From beloved classics to regional treasures, each jar carries a distinct story." />
                     <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
@@ -117,10 +117,6 @@ export default function Home({ featuredProducts, seo }: HomeProps) {
                             .map((product) => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
-                    </div>
-                    <div className="border-primary/20 bg-background mt-8 rounded-2xl border p-5 text-center sm:text-left">
-                        <p className="font-extrabold">Buy 2 Get 1 on every cart of 3 jars</p>
-                        <p className="text-muted-foreground mt-1 text-sm">The cheapest jar is on us. Pair mango with lemon, or build a regional tasting set.</p>
                     </div>
                 </div>
             </section>
@@ -168,7 +164,7 @@ export default function Home({ featuredProducts, seo }: HomeProps) {
                 </div>
             </section>
 
-            <section className="bg-brand-deep text-primary-foreground py-16 sm:py-24">
+            <section className="bg-brand-deep text-primary-foreground hidden py-16 sm:py-24">
                 <div className="section-shell">
                     <SectionTitle dark script="Watch the magic" title="See YumYum Pickles In Action" copy="Instagram Reels, YouTube Shorts, recipes, behind the scenes and honest customer reactions." />
                     <Carousel className="mt-10" tone="dark" label="Videos">
@@ -179,7 +175,7 @@ export default function Home({ featuredProducts, seo }: HomeProps) {
                 </div>
             </section>
 
-            <section className="py-16 sm:py-24">
+            <section className="hidden py-16 sm:py-24">
                 <div className="section-shell">
                     <SectionTitle script="Serve it your way" title="Recipe inspiration" copy="Everyday meals transformed with a bright, spicy little twist." />
                     <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
