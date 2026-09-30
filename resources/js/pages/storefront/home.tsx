@@ -164,7 +164,7 @@ export default function Home({ featuredProducts, seo }: HomeProps) {
                 </div>
             </section>
 
-            <section className="bg-brand-deep text-primary-foreground hidden py-16 sm:py-24">
+            <section className="bg-brand-deep text-primary-foreground0. py-16 sm:py-24">
                 <div className="section-shell">
                     <SectionTitle dark script="Watch the magic" title="See YumYum Pickles In Action" copy="Instagram Reels, YouTube Shorts, recipes, behind the scenes and honest customer reactions." />
                     <Carousel className="mt-10" tone="dark" label="Videos">

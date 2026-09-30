@@ -243,24 +243,66 @@ export function Newsletter() {
     );
 }
 
-export function VideoCard({ title, tag, views, image }: { title: string; tag: string; views: string; image?: string | null }) {
+export function VideoCard({ title, tag, views, image, video }: { title: string; tag: string; views: string; image?: string | null; video?: string | null }) {
     const [open, setOpen] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    useEffect(() => {
+        const element = videoRef.current;
+
+        if (!element) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    element.play().catch(() => {});
+                } else {
+                    element.pause();
+                }
+            },
+            { threshold: 0.25 },
+        );
+
+        observer.observe(element);
+
+        return () => observer.disconnect();
+    }, [video]);
 
     return (
         <>
             <article className="relative aspect-[9/16] w-[220px] shrink-0 overflow-hidden rounded-lg sm:w-[260px]">
-                {image && <img src={image} alt="" loading="lazy" className="size-full object-cover" />}
+                {video ? (
+                    <video
+                        ref={videoRef}
+                        src={video}
+                        poster={image ?? undefined}
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        aria-hidden="true"
+                        className="size-full object-cover"
+                    />
+                ) : (
+                    image && <img src={image} alt="" loading="lazy" className="size-full object-cover" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-deep/90 via-transparent to-transparent" />
-                <Button
-                    size="icon"
-                    variant="golden"
-                    className="absolute top-1/2 left-1/2 size-14 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                    aria-label={`Play ${title}`}
-                    onClick={() => setOpen(true)}
-                >
-                    <Play className="fill-current" />
-                </Button>
-                <div className="absolute inset-x-0 bottom-0 p-4">
+                {video ? (
+                    <button type="button" className="absolute inset-0 cursor-pointer" aria-label={`Watch ${title}`} onClick={() => setOpen(true)} />
+                ) : (
+                    <Button
+                        size="icon"
+                        variant="golden"
+                        className="absolute top-1/2 left-1/2 size-14 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        aria-label={`Play ${title}`}
+                        onClick={() => setOpen(true)}
+                    >
+                        <Play className="fill-current" />
+                    </Button>
+                )}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
                     <span className="text-accent text-xs font-bold">{tag.toUpperCase()}</span>
                     <h3 className="mt-1 text-lg font-extrabold">{title}</h3>
                     <p className="text-primary-foreground/70 text-xs">{views} views</p>
@@ -268,8 +310,17 @@ export function VideoCard({ title, tag, views, image }: { title: string; tag: st
             </article>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-md overflow-hidden p-0">
-                    {image && <img src={image} alt={title} className="aspect-[9/16] w-full object-cover" />}
-                    <div className="from-brand-deep text-primary-foreground absolute inset-x-0 bottom-0 bg-gradient-to-t p-5">
+                    {video ? (
+                        <video src={video} poster={image ?? undefined} autoPlay muted loop playsInline controls className="aspect-[9/16] w-full bg-black object-cover" />
+                    ) : (
+                        image && <img src={image} alt={title} className="aspect-[9/16] w-full object-cover" />
+                    )}
+                    <div
+                        className={cn(
+                            'from-brand-deep text-primary-foreground absolute inset-x-0 bottom-0 bg-gradient-to-t p-5',
+                            video && 'pointer-events-none top-0 bottom-auto bg-gradient-to-b',
+                        )}
+                    >
                         <p className="text-accent text-xs font-bold">{tag}</p>
                         <h3 className="text-xl font-extrabold">{title}</h3>
                         <p className="text-primary-foreground/75 mt-2 text-sm">A short from the YumYum kitchen — spice, sunshine and the sound of a fresh jar opening.</p>

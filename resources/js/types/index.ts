@@ -45,7 +45,7 @@ export interface StorefrontContent {
     announcements: string[];
     storySteps: Array<{ title: string; copy: string; image?: string | null; position?: string }>;
     whyChoose: Array<{ title: string; copy: string }>;
-    videos: Array<{ title: string; tag: string; views: string; image?: string | null }>;
+    videos: Array<{ title: string; tag: string; views: string; image?: string | null; video?: string | null }>;
     testimonials: Array<{ name: string; city: string; initials: string; rating: number; text: string }>;
     instagramPosts: Array<{ image?: string | null; alt: string; likes: number; reel?: boolean; position?: string }>;
     faqs: Array<{ q: string; a: string }>;

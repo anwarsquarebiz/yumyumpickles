@@ -89,6 +89,10 @@ class DatabaseSeeder extends Seeder
     {
         $settings = app(SettingsService::class);
 
+        foreach (['vid1.mp4', 'vid2.mp4', 'vid3.mp4', 'vid4.mp4', 'vid5.mp4'] as $video) {
+            $this->copyAsset($video, 'videos');
+        }
+
         $settings->setMany([
             'storefront.announcements' => [
                 'Free Shipping Above ₹499',
@@ -113,12 +117,11 @@ class DatabaseSeeder extends Seeder
                 ['title' => 'Fast Delivery', 'copy' => 'Pan India shipping, COD and free delivery above ₹499 — so the jar arrives while it still feels special.'],
             ],
             'storefront.videos' => [
-                ['title' => 'Prawns Balchao batch', 'tag' => 'Behind The Scenes', 'views' => '24K', 'image' => 'prawns-balchao.png'],
-                ['title' => 'Meet the bombil jar', 'tag' => 'YouTube Shorts', 'views' => '18K', 'image' => 'bombil-pickle.png'],
-                ['title' => 'Achaar paratha', 'tag' => 'Recipe Videos', 'views' => '41K', 'image' => 'yumyum-recipes.jpg'],
-                ['title' => 'First taste', 'tag' => 'Customer Reactions', 'views' => '33K', 'image' => 'yumyum-lifestyle.jpg'],
-                ['title' => 'The four-jar set', 'tag' => 'Instagram Reels', 'views' => '21K', 'image' => 'yumyum-four.png'],
-                ['title' => 'Brinjal pickle day', 'tag' => 'Behind The Scenes', 'views' => '29K', 'image' => 'brinjal-pickle.png'],
+                ['title' => 'Prawns Balchao batch', 'tag' => 'Behind The Scenes', 'views' => '24K', 'image' => 'prawns-balchao.png', 'video' => 'vid1.mp4'],
+                ['title' => 'Meet the bombil jar', 'tag' => 'YouTube Shorts', 'views' => '18K', 'image' => 'bombil-pickle.png', 'video' => 'vid2.mp4'],
+                ['title' => 'Achaar paratha', 'tag' => 'Recipe Videos', 'views' => '41K', 'image' => 'yumyum-recipes.jpg', 'video' => 'vid3.mp4'],
+                ['title' => 'First taste', 'tag' => 'Customer Reactions', 'views' => '33K', 'image' => 'yumyum-lifestyle.jpg', 'video' => 'vid4.mp4'],
+                ['title' => 'The four-jar set', 'tag' => 'Instagram Reels', 'views' => '21K', 'image' => 'yumyum-four.png', 'video' => 'vid5.mp4'],
             ],
             'storefront.testimonials' => [
                 ['name' => 'Meera Shah', 'city' => 'Mumbai', 'rating' => 5, 'text' => 'The prawns balchao tastes like a Goan home kitchen. The jar disappeared in four days!', 'initials' => 'MS'],
@@ -640,6 +643,7 @@ class DatabaseSeeder extends Seeder
             base_path('resources/js/assets/'.$filename),
             base_path('../yumyum-pickle-experience/src/assets/products/'.$filename),
             base_path('../yumyum-pickle-experience/src/assets/'.$filename),
+            base_path('../videos/'.$filename),
             storage_path('app/public/'.$destRel),
         ];
 

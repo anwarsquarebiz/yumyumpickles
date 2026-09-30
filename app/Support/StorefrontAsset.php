@@ -19,7 +19,7 @@ final class StorefrontAsset
             return $filename;
         }
 
-        foreach (['products', 'banners', 'collections', 'recipes', 'content'] as $folder) {
+        foreach (['products', 'banners', 'collections', 'recipes', 'content', 'videos'] as $folder) {
             $path = $folder.'/'.$filename;
 
             if (Storage::disk('public')->exists($path)) {

@@ -73,8 +73,10 @@ class StorefrontContentService
     private function withImages(array $items): array
     {
         return array_map(function (array $item): array {
-            if (isset($item['image'])) {
-                $item['image'] = StorefrontAsset::url((string) $item['image']);
+            foreach (['image', 'video'] as $key) {
+                if (isset($item[$key])) {
+                    $item[$key] = StorefrontAsset::url((string) $item[$key]);
+                }
             }
 
             return $item;
