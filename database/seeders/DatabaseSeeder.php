@@ -26,6 +26,7 @@ use App\Models\ShippingMethod;
 use App\Models\User;
 use App\Services\Settings\SettingsService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
@@ -68,7 +69,7 @@ class DatabaseSeeder extends Seeder
             'seo.default_title' => 'YumYum Pickles — The Taste of Tradition',
             'seo.default_description' => 'Homemade Goan and coastal pickles, packed in glass and delivered across India.',
             'social.facebook' => 'https://facebook.com/yumyumpickles',
-            'social.instagram' => 'https://instagram.com/yumyumpickles',
+            'social.instagram' => 'https://www.instagram.com/yumyumhomemade_pickle/',
             'social.youtube' => 'https://youtube.com/@yumyumpickles',
             'checkout.guest_checkout_enabled' => true,
             'checkout.tax_rate_basis_points' => 0,
@@ -506,7 +507,7 @@ class DatabaseSeeder extends Seeder
                         'author_city' => $city,
                         'rating' => $rating,
                         'status' => ReviewStatus::Approved,
-                        'reviewed_at' => \Illuminate\Support\Carbon::parse($date),
+                        'reviewed_at' => Carbon::parse($date),
                     ],
                 );
             }

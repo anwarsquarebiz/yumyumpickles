@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Storefront;
 
+use App\Enums\OrderStatus;
+use App\Enums\PaymentStatus;
 use App\Exceptions\CheckoutException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Storefront\PlaceOrderRequest;
@@ -14,6 +16,8 @@ use App\Services\Cart\CartService;
 use App\Services\Checkout\CheckoutService;
 use App\Services\Checkout\ShippingCalculator;
 use App\Services\Currency\CurrencyConverter;
+use App\Services\Payments\CheckoutPaymentMethods;
+use App\Services\Payments\PaymentGatewayManager;
 use App\Services\Settings\SettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,6 +34,8 @@ class CheckoutController extends Controller
         private readonly ShippingCalculator $shipping,
         private readonly SettingsService $settings,
         private readonly CurrencyConverter $converter,
+        private readonly CheckoutPaymentMethods $paymentMethods,
+        private readonly PaymentGatewayManager $gateways,
     ) {}
 
     public function show(): Response|RedirectResponse
@@ -68,6 +74,7 @@ class CheckoutController extends Controller
             ],
             'tax_rate_basis_points' => (int) $this->settings->get('checkout.tax_rate_basis_points', 0),
             'guest_checkout_enabled' => (bool) $this->settings->get('checkout.guest_checkout_enabled', true),
+            'payment_methods' => $this->paymentMethods->options(),
             'seo' => [
                 'title' => 'Checkout',
                 'description' => 'Complete your purchase.',
@@ -129,6 +136,53 @@ class CheckoutController extends Controller
             'seo' => [
                 'title' => "Order {$order->order_number}",
                 'description' => 'Thank you for your order.',
+            ],
+        ]);
+    }
+
+    /**
+     * Opens Razorpay's checkout modal for a pending online payment. Once the
+     * order is no longer awaiting payment the customer goes to the complete page.
+     */
+    public function pay(Order $order): Response|RedirectResponse
+    {
+        $this->assertVisible($order);
+
+        $payment = $order->payments()
+            ->where('gateway', 'razorpay')
+            ->where('status', PaymentStatus::Pending->value)
+            ->latest('id')
+            ->first();
+
+        if ($payment === null || $order->status !== OrderStatus::Pending) {
+            return to_route('checkout.complete', $order);
+        }
+
+        $shipping = (array) $order->shipping_address;
+
+        return Inertia::render('storefront/checkout-pay', [
+            'order_number' => $order->order_number,
+            'grand_total' => $order->grandTotal(),
+            'callback_url' => route('checkout.callback', $order),
+            'complete_url' => route('checkout.complete', $order),
+            'checkout_script' => (string) config('payments.gateways.razorpay.checkout_script'),
+            'razorpay' => [
+                'key' => $this->gateways->razorpay()->checkoutKeyId($payment),
+                'order_id' => $payment->gateway_reference,
+                'amount' => $payment->money()->amount,
+                'currency' => $payment->currency,
+                'name' => (string) $this->settings->get('store.name'),
+                'description' => "Order {$order->order_number}",
+                'prefill' => [
+                    'name' => trim(($shipping['first_name'] ?? '').' '.($shipping['last_name'] ?? '')),
+                    'email' => $order->email,
+                    'contact' => (string) ($order->phone ?? ''),
+                ],
+                'notes' => ['order_number' => $order->order_number],
+            ],
+            'seo' => [
+                'title' => 'Complete payment',
+                'description' => "Pay for order {$order->order_number}.",
             ],
         ]);
     }

@@ -225,7 +225,7 @@ export default function Home({ featuredProducts, seo }: HomeProps) {
                         <SectionTitle script="On the gram" title="Instagram feed" copy="Jars, kitchens and first tastes from the YumYum table." />
                         <Button asChild variant="outline">
                             <a href={brand?.instagram} target="_blank" rel="noreferrer">
-                                Follow @yumyumpickles
+                                Follow @yumyumhomemade_pickle
                             </a>
                         </Button>
                     </div>

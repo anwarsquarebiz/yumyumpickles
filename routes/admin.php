@@ -75,6 +75,7 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
         Route::post('settings/branding', [SettingsController::class, 'updateBranding'])->name('settings.branding.update');
+        Route::put('settings/payments', [SettingsController::class, 'updatePayments'])->name('settings.payments.update');
 
         Route::get('shipping-methods', [ShippingMethodController::class, 'index'])->name('shipping-methods.index');
         Route::post('shipping-methods', [ShippingMethodController::class, 'store'])->name('shipping-methods.store');

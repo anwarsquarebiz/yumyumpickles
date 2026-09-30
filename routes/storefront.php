@@ -73,6 +73,7 @@ Route::delete('cart/coupon', [CartCouponController::class, 'destroy'])->name('ca
 Route::get('checkout', [CheckoutController::class, 'show'])->name('checkout.show');
 Route::post('checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('checkout/{order}/complete', [CheckoutController::class, 'complete'])->name('checkout.complete');
+Route::get('checkout/{order}/pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
 Route::get('checkout/{order}/callback', [CheckoutController::class, 'callback'])->name('checkout.callback');
 Route::post('checkout/{order}/callback', [CheckoutController::class, 'callback']);
 

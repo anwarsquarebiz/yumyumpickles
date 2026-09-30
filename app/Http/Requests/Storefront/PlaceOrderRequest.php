@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Storefront;
 
+use App\Services\Payments\CheckoutPaymentMethods;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,6 +17,7 @@ class PlaceOrderRequest extends FormRequest
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:32'],
             'shipping_method_id' => ['required', 'integer', Rule::exists('shipping_methods', 'id')->where('is_active', true)],
+            'payment_method' => ['nullable', 'string', Rule::in(app(CheckoutPaymentMethods::class)->values())],
             'customer_note' => ['nullable', 'string', 'max:1000'],
             'save_address' => ['boolean'],
             'billing_same_as_shipping' => ['boolean'],

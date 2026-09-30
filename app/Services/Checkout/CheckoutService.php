@@ -3,6 +3,7 @@
 namespace App\Services\Checkout;
 
 use App\Enums\AddressType;
+use App\Enums\CouponType;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Exceptions\CheckoutException;
@@ -19,6 +20,7 @@ use App\Services\Cart\CartService;
 use App\Services\Cart\CouponService;
 use App\Services\Catalog\InventoryService;
 use App\Services\Orders\OrderNumberGenerator;
+use App\Services\Payments\CheckoutPaymentMethods;
 use App\Services\Payments\PaymentGatewayManager;
 use App\Services\Settings\SettingsService;
 use App\Support\CheckoutTotals;
@@ -39,6 +41,7 @@ use Illuminate\Support\Facades\DB;
  *     billing?: array<string, mixed>|null,
  *     billing_same_as_shipping?: bool,
  *     shipping_method_id: int,
+ *     payment_method?: string|null,
  *     customer_note?: string|null,
  *     save_address?: bool
  * }
@@ -56,6 +59,7 @@ class CheckoutService
         private readonly PaymentGatewayManager $gateways,
         private readonly SettingsService $settings,
         private readonly MetaAttribution $attribution,
+        private readonly CheckoutPaymentMethods $paymentMethods,
     ) {}
 
     /**
@@ -218,7 +222,7 @@ class CheckoutService
             return;
         }
 
-        if (! $totals->discount->isPositive() && $cart->coupon->type !== \App\Enums\CouponType::FreeShipping) {
+        if (! $totals->discount->isPositive() && $cart->coupon->type !== CouponType::FreeShipping) {
             return;
         }
 
@@ -253,6 +257,7 @@ class CheckoutService
                 'gateway_reference' => $initiation->reference,
                 'status' => $initiation->status,
                 'redirect_url' => $initiation->redirectUrl,
+                'request_payload' => $initiation->requestPayload === [] ? null : $initiation->requestPayload,
                 'response_payload' => $initiation->payload,
                 'paid_at' => $initiation->status === PaymentStatus::Paid ? now() : null,
             ])->save();
@@ -267,15 +272,12 @@ class CheckoutService
     {
         $method = strtolower((string) $paymentMethod);
 
-        if (in_array($method, ['cod', 'cash', 'manual'], true)) {
+        if (in_array($method, ['cash', 'manual'], true)) {
             return 'manual';
         }
 
-        if (in_array($method, ['upi', 'cards', 'card', 'netbanking', 'online'], true)) {
-            return (string) config('payments.default', 'manual');
-        }
-
-        return (string) config('payments.default', 'manual');
+        return $this->paymentMethods->gatewayFor($method)
+            ?? (string) config('payments.default', 'manual');
     }
 
     private function awardLoyalty(Order $order, ?User $customer): void

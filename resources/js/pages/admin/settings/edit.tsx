@@ -1,5 +1,6 @@
 import { BrandingForm } from '@/components/admin/branding-form';
 import { FormCard, FormField } from '@/components/admin/form-field';
+import { PaymentSettingsForm, type PaymentSettingsProps } from '@/components/admin/payment-settings-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AdminLayout from '@/layouts/admin-layout';
@@ -27,6 +28,7 @@ interface GoogleTagManagerProps {
 
 interface AdminSettingsProps {
     settings: Record<string, unknown>;
+    payments: PaymentSettingsProps;
     meta_ads: MetaAdsProps;
     google_analytics: GoogleAnalyticsProps;
     google_tag_manager: GoogleTagManagerProps;
@@ -38,7 +40,7 @@ interface AdminSettingsProps {
 
 const str = (value: unknown): string => (value === null || value === undefined ? '' : String(value));
 
-export default function AdminSettings({ settings, meta_ads, google_analytics, google_tag_manager, branding }: AdminSettingsProps) {
+export default function AdminSettings({ settings, payments, meta_ads, google_analytics, google_tag_manager, branding }: AdminSettingsProps) {
     const form = useForm({
         store: {
             name: str(settings['store.name']),
@@ -78,6 +80,7 @@ export default function AdminSettings({ settings, meta_ads, google_analytics, go
         social: {
             facebook: str(settings['social.facebook']),
             instagram: str(settings['social.instagram']),
+            youtube: str(settings['social.youtube']),
             twitter: str(settings['social.twitter']),
         },
         ads: {
@@ -105,6 +108,7 @@ export default function AdminSettings({ settings, meta_ads, google_analytics, go
     const adsError = (field: string): string | undefined => form.errors[`ads.${field}`];
     const googleError = (field: string): string | undefined => form.errors[`google.${field}`];
     const gtmError = (field: string): string | undefined => form.errors[`gtm.${field}`];
+    const socialError = (field: string): string | undefined => form.errors[`social.${field}`];
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: '/admin' },
@@ -112,7 +116,7 @@ export default function AdminSettings({ settings, meta_ads, google_analytics, go
     ];
 
     return (
-        <AdminLayout breadcrumbs={breadcrumbs} title="Settings" description="Store details, branding, checkout, SEO and analytics.">
+        <AdminLayout breadcrumbs={breadcrumbs} title="Settings" description="Store details, payments, branding, checkout, SEO and analytics.">
             <form onSubmit={submit} className="grid gap-6 lg:grid-cols-2">
                 <FormCard title="Store">
                     <FormField label="Name" htmlFor="store_name">
@@ -184,6 +188,44 @@ export default function AdminSettings({ settings, meta_ads, google_analytics, go
                             id="seo_description"
                             value={form.data.seo.default_description}
                             onChange={(event) => form.setData('seo', { ...form.data.seo, default_description: event.target.value })}
+                        />
+                    </FormField>
+                </FormCard>
+                <FormCard title="Social links" description="Full profile URLs used by the storefront header, footer and Instagram feed.">
+                    <FormField label="Instagram" htmlFor="social_instagram" error={socialError('instagram')}>
+                        <Input
+                            id="social_instagram"
+                            type="url"
+                            value={form.data.social.instagram}
+                            placeholder="https://www.instagram.com/yourhandle/"
+                            onChange={(event) => form.setData('social', { ...form.data.social, instagram: event.target.value })}
+                        />
+                    </FormField>
+                    <FormField label="Facebook" htmlFor="social_facebook" error={socialError('facebook')}>
+                        <Input
+                            id="social_facebook"
+                            type="url"
+                            value={form.data.social.facebook}
+                            placeholder="https://facebook.com/yourpage"
+                            onChange={(event) => form.setData('social', { ...form.data.social, facebook: event.target.value })}
+                        />
+                    </FormField>
+                    <FormField label="YouTube" htmlFor="social_youtube" error={socialError('youtube')}>
+                        <Input
+                            id="social_youtube"
+                            type="url"
+                            value={form.data.social.youtube}
+                            placeholder="https://youtube.com/@yourchannel"
+                            onChange={(event) => form.setData('social', { ...form.data.social, youtube: event.target.value })}
+                        />
+                    </FormField>
+                    <FormField label="X (Twitter)" htmlFor="social_twitter" error={socialError('twitter')}>
+                        <Input
+                            id="social_twitter"
+                            type="url"
+                            value={form.data.social.twitter}
+                            placeholder="https://x.com/yourhandle"
+                            onChange={(event) => form.setData('social', { ...form.data.social, twitter: event.target.value })}
                         />
                     </FormField>
                 </FormCard>
@@ -309,6 +351,14 @@ export default function AdminSettings({ settings, meta_ads, google_analytics, go
                     </Button>
                 </div>
             </form>
+
+            <section className="space-y-4">
+                <div>
+                    <h2 className="text-lg font-medium">Payments</h2>
+                    <p className="text-muted-foreground text-sm">Payment gateway keys are saved separately from store text settings.</p>
+                </div>
+                <PaymentSettingsForm payments={payments} />
+            </section>
 
             <section className="space-y-4">
                 <div>

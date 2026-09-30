@@ -18,8 +18,11 @@ use App\Services\Storefront\NavigationService;
 use App\Services\Storefront\StorefrontContentService;
 use App\Support\CartTotals;
 use App\Support\Money;
+use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Inertia\Support\Header;
+use Symfony\Component\HttpFoundation\Response;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -46,6 +49,22 @@ class HandleInertiaRequests extends Middleware
         private readonly StorefrontContentService $content,
         private readonly ProductRepositoryInterface $products,
     ) {}
+
+    /**
+     * Inertia JSON shares its URL with the full HTML page. Browsers restoring a
+     * discarded tab reuse the cached entry and ignore `Vary`, so the JSON must
+     * never be stored or visitors see raw page data instead of the site.
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        $response = parent::handle($request, $next);
+
+        if ($request->header(Header::INERTIA)) {
+            $response->headers->set('Cache-Control', 'no-store, private');
+        }
+
+        return $response;
+    }
 
     /**
      * Determines the current asset version.

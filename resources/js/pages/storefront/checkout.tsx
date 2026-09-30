@@ -17,7 +17,14 @@ interface CheckoutPageProps {
     customer: { email: string; phone: string | null; name: string } | null;
     tax_rate_basis_points: number;
     guest_checkout_enabled: boolean;
+    payment_methods: PaymentMethodOption[];
     seo: SeoMeta;
+}
+
+interface PaymentMethodOption {
+    value: string;
+    label: string;
+    description: string;
 }
 
 interface AddressFields {
@@ -56,6 +63,7 @@ export default function CheckoutPage({
     customer,
     tax_rate_basis_points,
     guest_checkout_enabled,
+    payment_methods,
     seo,
 }: CheckoutPageProps) {
     const { auth } = usePage<SharedData>().props;
@@ -67,6 +75,7 @@ export default function CheckoutPage({
         email: customer?.email ?? '',
         phone: customer?.phone ?? '',
         shipping_method_id: firstMethod?.id ?? 0,
+        payment_method: payment_methods[0]?.value ?? 'cod',
         customer_note: '',
         save_address: Boolean(auth.user),
         billing_same_as_shipping: true,
@@ -139,7 +148,7 @@ export default function CheckoutPage({
     return (
         <StorefrontLayout>
             <Head title={seo.title} />
-            <PageIntro eyebrow="Last step" title="Checkout" copy="Guest checkout, saved addresses, and cash on delivery. We pack every jar as if it were travelling to family." />
+            <PageIntro eyebrow="Last step" title="Checkout" copy="Guest checkout, saved addresses, online payment or cash on delivery. We pack every jar as if it were travelling to family." />
             <Breadcrumbs items={[{ label: 'Cart', href: '/cart' }, { label: 'Checkout' }]} />
 
             <div className="section-shell pb-20">
@@ -210,6 +219,27 @@ export default function CheckoutPage({
                                 {form.errors.shipping_method_id && <p className="text-sm text-red-600">{form.errors.shipping_method_id}</p>}
                             </section>
 
+                            <section className="border-border space-y-4 rounded-2xl border p-5">
+                                <h2 className="text-lg font-extrabold">Payment</h2>
+                                <div className="space-y-2">
+                                    {payment_methods.map((method) => (
+                                        <label key={method.value} className="border-border flex items-center gap-3 rounded-xl border px-4 py-3 text-sm">
+                                            <input
+                                                type="radio"
+                                                name="payment_method"
+                                                checked={form.data.payment_method === method.value}
+                                                onChange={() => form.setData('payment_method', method.value)}
+                                            />
+                                            <span>
+                                                <span className="font-medium">{method.label}</span>
+                                                <span className="text-muted-foreground block text-xs">{method.description}</span>
+                                            </span>
+                                        </label>
+                                    ))}
+                                </div>
+                                {form.errors.payment_method && <p className="text-sm text-red-600">{form.errors.payment_method}</p>}
+                            </section>
+
                             {auth.user && (
                                 <label className="flex items-center gap-2 text-sm">
                                     <input
@@ -222,7 +252,7 @@ export default function CheckoutPage({
                             )}
 
                             <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={form.processing || shipping_methods.length === 0}>
-                                Place COD order
+                                {form.data.payment_method === 'cod' ? 'Place COD order' : 'Continue to payment'}
                             </Button>
                         </div>
 

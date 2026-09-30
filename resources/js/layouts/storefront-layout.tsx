@@ -24,6 +24,12 @@ const nav = [
 export default function StorefrontLayout({ children }: { children: ReactNode }) {
     const { auth, cart, content, catalog, flash } = usePage<SharedData>().props;
     const brand = content?.brand;
+    const socialLinks = [
+        { label: 'Instagram', href: brand?.instagram, Icon: Instagram },
+        { label: 'Facebook', href: brand?.facebook, Icon: Facebook },
+        { label: 'YouTube', href: brand?.youtube, Icon: Youtube },
+        { label: 'WhatsApp', href: brand?.whatsapp ? `https://wa.me/${brand.whatsapp}` : '', Icon: MessageCircle },
+    ].filter((link) => Boolean(link.href?.trim()));
     const announcements = content?.announcements?.length ? content.announcements : ['Free Shipping Above ₹499', 'COD Available', 'Pan India Delivery'];
     const [searchOpen, setSearchOpen] = useState(false);
     const [query, setQuery] = useState('');
@@ -166,28 +172,17 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
                     <div>
                         <img src={images.logoImage} alt="YumYum Pickles" className="h-28 w-auto object-contain" width="176" height="112" />
                         <p className="text-primary-foreground/75 mt-4 max-w-sm text-sm leading-6">Homemade Indian pickles, prepared from family recipes, premium ingredients and hygienic processes. A little nostalgia in every jar.</p>
-                        <div className="mt-5 flex gap-2">
-                            <Button asChild variant="golden" size="icon" aria-label="Instagram">
-                                <a href={brand?.instagram || 'https://instagram.com/yumyumpickles'} target="_blank" rel="noreferrer">
-                                    <Instagram />
-                                </a>
-                            </Button>
-                            <Button asChild variant="golden" size="icon" aria-label="Facebook">
-                                <a href={brand?.facebook || 'https://facebook.com/yumyumpickles'} target="_blank" rel="noreferrer">
-                                    <Facebook />
-                                </a>
-                            </Button>
-                            <Button asChild variant="golden" size="icon" aria-label="YouTube">
-                                <a href={brand?.youtube || 'https://youtube.com/@yumyumpickles'} target="_blank" rel="noreferrer">
-                                    <Youtube />
-                                </a>
-                            </Button>
-                            <Button asChild variant="golden" size="icon" aria-label="WhatsApp">
-                                <a href={`https://wa.me/${brand?.whatsapp || '919999999999'}`} target="_blank" rel="noreferrer">
-                                    <MessageCircle />
-                                </a>
-                            </Button>
-                        </div>
+                        {socialLinks.length > 0 && (
+                            <div className="mt-5 flex gap-2">
+                                {socialLinks.map(({ label, href, Icon }) => (
+                                    <Button key={label} asChild variant="golden" size="icon" aria-label={label}>
+                                        <a href={href} target="_blank" rel="noreferrer">
+                                            <Icon />
+                                        </a>
+                                    </Button>
+                                ))}
+                            </div>
+                        )}
                     </div>
                     <FooterColumn title="Company" links={[['About Us', '/our-story'], ['Contact Us', '/contact'], ['FAQs', '/faq'], ['Recipes', '/recipes']]} />
                     <FooterColumn title="Customer Service" links={[['Shipping Policy', '/shipping'], ['Refund Policy', '/refunds'], ['Privacy Policy', '/privacy'], ['Terms & Conditions', '/terms']]} />
@@ -205,7 +200,7 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
                 <div className="border-primary-foreground/15 text-primary-foreground/60 border-t py-5 text-center text-xs">© {new Date().getFullYear()} YumYum Pickles. Made in India with love and achaar.</div>
             </footer>
             <a
-                href={`https://wa.me/${brand?.whatsapp || '919999999999'}?text=Hello%20YumYum%20Pickles`}
+                href={`https://wa.me/${brand?.whatsapp ?? ''}?text=Hello%20YumYum%20Pickles`}
                 target="_blank"
                 rel="noreferrer"
                 className="bg-brand-leaf text-primary-foreground fixed right-5 bottom-5 z-40 grid size-14 place-items-center rounded-full shadow-xl transition-transform hover:scale-105"

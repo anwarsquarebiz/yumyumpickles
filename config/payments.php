@@ -86,6 +86,19 @@ return [
             'retries' => env('PAYMENT_GATEWAY_RETRIES', 2),
         ],
 
+        /*
+         | Keys, mode (test/live) and webhook secrets are managed from
+         | Admin → Settings → Payments and stored encrypted in the settings
+         | table, so only transport details live here.
+         */
+        'razorpay' => [
+            'driver' => 'razorpay',
+            'base_url' => env('RAZORPAY_BASE_URL', 'https://api.razorpay.com/v1'),
+            'checkout_script' => 'https://checkout.razorpay.com/v1/checkout.js',
+            'timeout' => env('RAZORPAY_TIMEOUT', 30),
+            'retries' => env('RAZORPAY_RETRIES', 2),
+        ],
+
         'manual' => [
             'driver' => 'manual',
         ],

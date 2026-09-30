@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Settings\UpdateBrandingSettingsRequest;
+use App\Http\Requests\Admin\Settings\UpdatePaymentSettingsRequest;
 use App\Http\Requests\Admin\Settings\UpdateStoreSettingsRequest;
 use App\Services\Ads\GoogleAnalyticsSettings;
 use App\Services\Ads\GoogleTagManagerSettings;
 use App\Services\Ads\MetaAdsSettings;
+use App\Services\Payments\CheckoutPaymentMethods;
+use App\Services\Payments\RazorpaySettings;
 use App\Services\Settings\BrandingService;
 use App\Services\Settings\SettingsService;
 use Illuminate\Http\RedirectResponse;
@@ -22,6 +25,8 @@ class SettingsController extends Controller
         private readonly MetaAdsSettings $metaAds,
         private readonly GoogleAnalyticsSettings $googleAnalytics,
         private readonly GoogleTagManagerSettings $googleTagManager,
+        private readonly RazorpaySettings $razorpay,
+        private readonly CheckoutPaymentMethods $paymentMethods,
     ) {}
 
     public function edit(): Response
@@ -29,7 +34,13 @@ class SettingsController extends Controller
         abort_unless(request()->user()?->isAdmin(), 403);
 
         return Inertia::render('admin/settings/edit', [
-            'settings' => $this->settings->all()->except(['ads.meta.access_token']),
+            'settings' => $this->settings->all()
+                ->except(['ads.meta.access_token'])
+                ->reject(fn (mixed $value, string $key): bool => str_starts_with($key, 'payments.')),
+            'payments' => [
+                'cod_enabled' => $this->paymentMethods->codEnabled(),
+                'razorpay' => $this->razorpay->adminPayload(),
+            ],
             'meta_ads' => $this->metaAds->adminPayload(),
             'google_analytics' => $this->googleAnalytics->adminPayload(),
             'google_tag_manager' => $this->googleTagManager->adminPayload(),
@@ -88,6 +99,7 @@ class SettingsController extends Controller
         $this->settings->setMany([
             'social.facebook' => $data['social']['facebook'] ?? '',
             'social.instagram' => $data['social']['instagram'] ?? '',
+            'social.youtube' => $data['social']['youtube'] ?? '',
             'social.twitter' => $data['social']['twitter'] ?? '',
         ], 'social');
 
@@ -104,6 +116,16 @@ class SettingsController extends Controller
         }
 
         return back()->with('success', 'Settings saved.');
+    }
+
+    public function updatePayments(UpdatePaymentSettingsRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        $this->razorpay->update($validated['razorpay']);
+        $this->paymentMethods->setCodEnabled((bool) ($validated['cod_enabled'] ?? true));
+
+        return back()->with('success', 'Payment settings saved.');
     }
 
     public function updateBranding(UpdateBrandingSettingsRequest $request): RedirectResponse

@@ -120,6 +120,7 @@ function storeSettingsPayload(array $overrides = []): array
         'social' => [
             'facebook' => '',
             'instagram' => '',
+            'youtube' => '',
             'twitter' => '',
         ],
         'ads' => [

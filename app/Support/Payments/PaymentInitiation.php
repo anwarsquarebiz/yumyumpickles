@@ -8,11 +8,13 @@ final class PaymentInitiation
 {
     /**
      * @param  array<string, mixed>  $payload
+     * @param  array<string, mixed>  $requestPayload
      */
     public function __construct(
         public readonly ?string $reference,
         public readonly PaymentStatus $status,
         public readonly ?string $redirectUrl = null,
         public readonly array $payload = [],
+        public readonly array $requestPayload = [],
     ) {}
 }
