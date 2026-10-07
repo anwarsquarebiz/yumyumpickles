@@ -27,6 +27,13 @@ final class StorefrontAsset
             }
         }
 
-        return Storage::disk('public')->url('products/'.$filename);
+        $fallbackFolder = self::isVideo($filename) ? 'videos' : 'products';
+
+        return Storage::disk('public')->url($fallbackFolder.'/'.$filename);
+    }
+
+    private static function isVideo(string $filename): bool
+    {
+        return in_array(strtolower(pathinfo($filename, PATHINFO_EXTENSION)), ['mp4', 'webm', 'mov', 'm4v'], true);
     }
 }

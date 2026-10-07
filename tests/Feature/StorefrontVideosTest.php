@@ -19,3 +19,17 @@ it('shares home videos with public urls for the video file and poster', function
             ->where('content.videos.0.image', 'https://cdn.example.com/poster.jpg')
         );
 });
+
+it('points video filenames at the videos folder even when the file is not on the storage disk', function () {
+    Storage::fake('public');
+
+    app(SettingsService::class)->set('storefront.videos', [
+        ['title' => 'First taste', 'tag' => 'Customer Reactions', 'views' => '33K', 'video' => 'vid4.mp4'],
+    ], 'storefront');
+
+    $this->get('/')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('content.videos.0.video', Storage::disk('public')->url('videos/vid4.mp4'))
+        );
+});
