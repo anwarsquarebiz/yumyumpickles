@@ -125,6 +125,10 @@
         @apply border-border;
     }
 
+    html {
+        overflow-x: clip;
+    }
+
     body {
         @apply bg-background text-foreground min-w-80 overflow-x-hidden;
         font-family: var(--font-sans);

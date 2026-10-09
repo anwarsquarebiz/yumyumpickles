@@ -221,9 +221,9 @@ export default function Home({ featuredProducts, seo }: HomeProps) {
 
             <section className="py-16 sm:py-24">
                 <div className="section-shell">
-                    <div className="flex items-end justify-between gap-4">
+                    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
                         <SectionTitle script="On the gram" title="Instagram feed" copy="Jars, kitchens and first tastes from the YumYum table." />
-                        <Button asChild variant="outline">
+                        <Button asChild variant="outline" className="max-w-full shrink-0">
                             <a href={brand?.instagram} target="_blank" rel="noreferrer">
                                 Follow @yumyumhomemade_pickle
                             </a>
