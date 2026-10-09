@@ -210,10 +210,10 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
             </a>
             <Sheet open={cartOpen} onOpenChange={setCartOpen}>
                 <SheetContent className="flex w-full flex-col sm:max-w-md">
-                    <SheetHeader>
+                    <SheetHeader className="pr-10 text-left">
                         <SheetTitle>Your cart ({cartCount})</SheetTitle>
                     </SheetHeader>
-                    <div className="mt-5 flex-1 space-y-4 overflow-y-auto">
+                    <div className="mt-5 min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain">
                         {items.length === 0 ? (
                             <div className="text-muted-foreground grid h-48 place-items-center text-center">Your cart is waiting for something delicious.</div>
                         ) : (
